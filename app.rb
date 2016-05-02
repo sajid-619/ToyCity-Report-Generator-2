@@ -1,147 +1,163 @@
 require 'json'
 
 def setup_files
-  path = File.join(File.dirname(__FILE__), '../data/products.json')
-  file = File.read(path)
-  $products_hash = JSON.parse(file)
-  $stdout.reopen(File.open('report.txt', 'w+'))
-end
-
-# Print "Sales Report" in ascii art
-def print_sales_report_ascii
-  puts "  ______       _                ______                                "
-  puts " / _____)     | |              (_____ \\                           _   "
-  puts "( (____  _____| | _____  ___    _____) )_____ ____   ___   ____ _| |_ "
-  puts " \\____ \\(____ | || ___ |/___)  |  __  /| ___ |  _ \\ / _ \\ / ___|_   _)"
-  puts " _____) ) ___ | || ____|___ |  | |  \\ \\| ____| |_| | |_| | |     | |_ "
-  puts "(______/\\_____|\\_)_____|___/   |_|   |_|_____)  __/ \\___/|_|      \\__)"
-  puts "                                             |_|  "
-end
-
-# Print today's date
-def print_date
-  puts Time.now.strftime("Today's Date: %d/%m/%Y")
-end
-
-# Print "Products" in ascii art
-def print_products_ascii
-  puts "                     _            _       "
-  puts "                    | |          | |      "
-  puts " _ __  _ __ ___   __| |_   _  ___| |_ ___ "
-  puts "| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|"
-  puts "| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\"
-  puts "| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/"
-  puts "| |                                       "
-  puts "|_|                                       "
-end
-
-# For each product in the data set:
-  # Print the name of the toy
-  # Print the retail price of the toy
-  # Calculate and print the total number of purchases
-  # Calculate and print the total amount of sales
-  # Calculate and print the average price the toy sold for
-  # Calculate and print the average discount (% or $) based off the average sales price
-
-def get_product(toy)
-  product = {
-    title: toy["title"],
-    retail_price: toy["full-price"].to_f,
-    purchases_number: toy["purchases"].length,
-    total_sales: 0
-  }
-  toy["purchases"].each do |purchase|
-    product[:total_sales] += purchase["price"].to_f
-  end
-  return product
-end
-
-def print_divider
-  puts "********************"
-end
-
-def print_blank_line
-  print "\n"
-end
-
-def print_product(product)
-  print_blank_line
-  puts product[:title]
-  print_divider
-  puts "Retail Price: $#{product[:retail_price]}"
-  puts "Total Purchases: #{product[:purchases_number]}"
-  puts "Total Sales: $#{product[:total_sales]}"
-  average_price = product[:total_sales] / product[:purchases_number]
-  average_discount = product[:retail_price] - average_price
-  average_discount_percentage = (average_discount * 100 / product[:retail_price]).round(2)
-  puts "Average Price: $#{average_price}"
-  puts "Average Discount: $#{average_discount}"
-  puts "Average Discount Percentage: #{average_discount_percentage}%"
-  print_divider
-end
-
-def collect_brand_info(toy, product)
-  brand_title = toy["brand"]
-  if (!$brands.has_key?(brand_title))
-  $brands[brand_title] = {stock: 0, prices: [], total_sales: []}
-  end
-  $brands[brand_title][:stock] += toy["stock"].to_i
-  $brands[brand_title][:prices].push(product[:retail_price])
-  $brands[brand_title][:total_sales].push(product[:total_sales])
-end
-
-def handle_products
-  print_products_ascii
-  $brands = {}
-  $products_hash["items"].each do |toy|
-    product = get_product(toy)
-    print_product(product)
-    collect_brand_info(toy, product)
-  end
-  print_blank_line
-end
-
-# Print "Brands" in ascii art
-def print_brands_ascii
-  puts " _                         _     "
-  puts "| |                       | |    "
-  puts "| |__  _ __ __ _ _ __   __| |___ "
-  puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
-  puts "| |_) | | | (_| | | | | (_| \\__ \\"
-  puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
-  puts
-end
-
-# For each brand in the data set:
-  # Print the name of the brand
-  # Count and print the number of the brand's toys we stock
-  # Calculate and print the average price of the brand's toys
-  # Calculate and print the total sales volume of all the brand's toys combined
-
-def print_brands
-  print_brands_ascii
-  $brands.each do |title, value|
-    puts title
-    print_divider
-    puts "Number of Products: #{value[:stock]}"
-    average_price = (value[:prices].reduce(:+) / value[:prices].length).round(2)
-    puts "Average Product Price: $#{average_price}"
-    total_sales = value[:total_sales].reduce(:+).round(2)
-    puts "Total Sales: $#{total_sales}"
-    print_blank_line
-  end
-end
-
-def create_report
-  print_sales_report_ascii
-  print_date
-  handle_products
-  print_brands
+	path = File.join(File.dirname(__FILE__), '../data/products.json')
+	file = File.read(path)
+	$products_hash = JSON.parse(file)
+	$report_file = File.new("report.txt", "w+")
 end
 
 def start
-  setup_files # load, read, parse, and create the files
-  create_report # create the report!
+	setup_files
+	create_report
 end
 
-start # call start method to trigger report generation
+def create_report
+	$report_file.puts print_sales_report_header # Print "Sales Report" in ascii art & Print today's date
+	$report_file.puts(Time.now.strftime("%D"))
+	$report_file.puts print_products_header # Print "Products" in ascii art
+	print_products_selection
+	$report_file.puts print_brands_header # Print "Brands" in ascii art
+	initialize_brands_data_containers
+	analyze_collect_brands_data
+	print_all_brands_data
+end
+
+def add_line_separator(line_length = 30)
+	return "*" * line_length
+end
+
+def add_line_return
+	puts "\n"
+end
+
+def average(number)
+	average = number / 2
+	return "Average Sales Price: $#{average}"
+end
+
+def discount(num1, num2)
+	num3 = (num1 - num2) / num1 * 100
+	return "Average Discount: #{num3.round(2)}%"
+end
+
+def avg_brand_price(num_value1, num_value2)
+	num_value3 = num_value1 / num_value2
+	return "Average Price: $#{num_value3.round(2)}"
+end
+
+def average_lego_brand_price(number)
+	average = number / 2
+	return "Average Price: $#{average.round(2)}"
+end
+
+def average_nano_brand_price(number)
+	average = number / 1
+	return "Average Price: $#{average.round(2)}"
+end
+
+def print_sales_report_header
+" ####                                  #####
+#     #   ##   #      ######  ####     #     # ###### #####   ####  #####  #####
+#        #  #  #      #      #         #     # #      #    # #    # #    #   #
+ #####  #    # #      #####   ####     ######  #####  #    # #    # #    #   #
+      # ###### #      #           #    #   #   #      #####  #    # #####    #
+#     # #    # #      #      #    #    #    #  #      #      #    # #   #    #
+ #####  #    # ###### ######  ####     #     # ###### #       ####  #    #   #
+********************************************************************************"
+end
+
+def print_products_header
+"                     _            _
+                    | |          | |
+ _ __  _ __ ___   __| |_   _  ___| |_ ___
+| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|
+| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\
+| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/
+| |
+|_|                                       "
+end
+
+def print_brands_header
+" _                         _
+| |                       | |
+| |__  _ __ __ _ _ __   __| |___
+| '_ \\| '__/ _` | '_ \\ / _` / __|
+| |_) | | | (_| | | | | (_| \\__ \\
+|_.__/|_|  \\__,_|_| |_|\\__,_|___/
+                                   "
+end
+
+def print_products_selection
+	$products_hash["items"].each do |toy|
+		$report_file.puts toy["title"]
+		$report_file.puts(add_line_separator)
+		retail_price = toy["full-price"].to_f
+		$report_file.puts "Retail Price: $#{toy["full-price"]}"
+		$report_file.puts "Total Purchases: #{toy["purchases"].count}"
+		total_sales = toy["purchases"][0]["price"].to_f + toy["purchases"][1]["price"].to_f
+		$report_file.puts "Total Sales: $#{total_sales}"
+		average_price = total_sales / 2
+		$report_file.puts average(total_sales)
+		$report_file.puts discount(retail_price, average_price)
+		$report_file.puts(add_line_return)
+	end
+end
+
+def initialize_brands_data_containers
+	$lego = {brand: "",count: 0, price_sum: 0, sales: 0, revenue: 0}
+	$nano_block = {brand: "",count: 0, price_sum: 0, sales: 0, revenue: 0}
+end
+
+def analyze_collect_brands_data
+	collect_lego_brand_data
+	collect_nano_brand_data
+end
+
+def collect_lego_brand_data
+	$products_hash["items"].each do |brand|
+		if brand["brand"] == "LEGO"
+			$lego[:brand] = brand["brand"] # assign brand name, ignoring duplicate
+			$lego[:count] += brand["stock"] # cycle through the data and combine stock values
+			$lego[:price_sum] += brand["full-price"].to_f
+			$lego[:revenue] += brand["purchases"][0]["price"].to_f + brand["purchases"][1]["price"].to_f # calculate price sum
+			$lego[:sales] += brand["purchases"].count # cycle through and calculate number of purchases
+		end
+	end
+end
+
+def collect_nano_brand_data
+	$products_hash["items"].each do |brand|
+		if brand["brand"] == "Nano Blocks"
+			$nano_block[:brand] = brand["brand"]
+			$nano_block[:count] += brand["stock"]
+			$nano_block[:price_sum] += brand["full-price"].to_f
+			$nano_block[:revenue] +=  brand["purchases"][0]["price"] + brand["purchases"][1]["price"].to_f
+			$nano_block[:sales] += brand["purchases"].count
+		end
+	end
+end
+
+def print_all_brands_data
+	print_lego_brand_data
+	$report_file.puts(add_line_return)
+	print_nano_brand_data
+end
+
+def print_lego_brand_data
+	$report_file.puts($lego[:brand])
+	$report_file.puts(add_line_separator)
+	$report_file.puts("Total Inventory: #{$lego[:count]}")
+	$report_file.puts(average_lego_brand_price($lego[:price_sum]))
+	$report_file.puts("Total Revenue: $#{$lego[:revenue].round(2)}")
+end
+
+def print_nano_brand_data
+	$report_file.puts($nano_block[:brand])
+	$report_file.puts(add_line_separator)
+	$report_file.puts("Total Inventory: #{$nano_block[:count]}")
+	$report_file.puts(average_nano_brand_price($nano_block[:price_sum]))
+	$report_file.puts("Total Revenue: $#{$nano_block[:revenue]}")
+end
+
+start
