@@ -1,0 +1,112 @@
+commit 44ec4487c689adba133f58c6f6c9e5fa36440670
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    add new hash value to capture brand revenue
+
+commit 2733b2bb86216ee795c056804f3b036cfd8d0fa3
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Updated avg brand calculation to use full price instead of the sum of individual brand purchases.
+
+commit 771fa628263d0f228f82348b17cb14f49fb5db18
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    refactored avg_brand_price method to update variable names.
+
+commit abf57a4de9d1418718d3e2acaaafb5b524345d8f
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    refactored average method.
+
+commit f4032d66f745158acd1479eba83dd8ada46ada9a
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Separated print_brands_data into two separate methods.
+
+commit 548a7b8909d8c77efd4951739a428f9c3eef59bb
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Refactored make_brands_selection if/else block into separate methods.
+
+commit 13dc872efce9953398cbb6c74919b29f66fd999f
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Separated make_brands_selection into two separate methods.
+
+commit ea2ccffe33321891e51fab45dc3b5c79988dbc07
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Updated print_brands_header to pass ascii art as a string.
+
+commit 02b1103b6d155b5693137cba907c5bb24ada1bdf
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Updated print_products_header to pass ascii art as a string.
+
+commit 484ae9b212c75b9dcda5b7b6b4237b1da8e23a54
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Refactored print_sales_report_header to pass the ascii art as a string.
+
+commit 0cbc885d665c6d2a06d836283ed7f9747dd77061
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Removed two commented out lines of print debugging code.
+
+commit 7418769266ff27716e9f96b37d1f2d40069b009e
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Refactored all methods to use  instead of File.open for writing to txt file.
+
+commit 14793d73870e33d115a976f8cbcb7ce02d54e09b
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Corrected the spacing for the sales report art so that the 'S' and 'R' display properly when the text file is opened.
+
+commit 069e3d1ed28c4d5ace74c8399c8e9c1b977c217a
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Added git lcommit log file.Date:   Mon May 1 15:00:42 2016 -0600
+
+commit a49ddefd79e870d8d07c27210561b564531e7ac0
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Added report output.
+
+commit 4cf580e72b632a06943b8864106b808ec64ab99a
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+    Removed test terminal outputs from create_report. Moved require 'json' outside the setup_files method.
+
+commit 4b2b673469a348183989b725a14076a9863759b7
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Added baseline code from ToyCity Part 1, refactored to use methods, and wrote output to .txt file.
+
+commit 4ede98631891cb3342bcd848867e2c7d88ddf88a
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Added initial placeholder methods, established successful connection between app.rb and .txt file to print sales report header.
+
+commit f63d4d5ae7fa508d2aafed11ec897c1ca5a8caa5
+Author: Sajid Zaman <zsajid014@gmail.com>
+Date:   Mon May 1 15:00:42 2016 -0600
+
+    Initial commit.
